@@ -2,6 +2,7 @@
 
 from flask import current_app as app
 
+import os
 import re
 import json
 from datetime import datetime
@@ -45,8 +46,8 @@ ALLOWED_TREATMENTS = [
     "Emergency Appointment",
 ]
 
-AIRTABLE_URL = "https://api.airtable.com/v0/appGrimhgiQjWqdxu/Table%201"
-AIRTABLE_KEY = "YOUR_AIRTABLE_API_KEY"  # <- Replace this before deploy
+AIRTABLE_BASE_ID  = os.environ["AIRTABLE_BASE_ID"]
+AIRTABLE_API_KEY = os.environ["AIRTABLE_API_KEY"]
 
 INTENTS = {
     "Book a appointment": [
