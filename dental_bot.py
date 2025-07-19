@@ -69,9 +69,9 @@ def match_intent(text: str) -> str:
     return best if score > 60 else "None"
 
 def push_to_airtable(name, dob, phone, email, treatment, date):
-    url = f"https://api.airtable.com/v0/{appGrimhgiQjWqdxu}/Bookings"
+    url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/Bookings"
     headers = {
-        "Authorization": f"Bearer {patbV051vVFih05QY}",
+        "Authorization": f"Bearer {AIRTABLE_API_KEY}",
         "Content-Type": "application/json"
     }
     payload = {
