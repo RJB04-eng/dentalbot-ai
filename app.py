@@ -5,8 +5,8 @@ from flask import Flask, request, jsonify
 from dental_bot import DentalBot, push_to_airtable
 import logging
 
-AIRTABLE_API_KEY = os.environ["patbV051vVFih05QY"]
-AIRTABLE_BASE_ID = os.environ["appGrimhgiQjWqdxu"]
+AIRTABLE_API_KEY = os.environ["AIRTABLE_API_KEY"]
+AIRTABLE_BASE_ID = os.environ["AIRTABLE_BASE_ID"]
 
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -43,13 +43,22 @@ def chat():
 @app.route("/book", methods=["POST"])
 def book():
     data = request.get_json(force=True)
+    app.logger.info(f"[BOOK] Received payload: {data}")
     try:
         ok = push_to_airtable(
-            data["name"], data["dob"], data["phone"], data["treatment"]
+            data["name"],
+            data["dob"],
+            data["phone"],
+            data["email"],
+            data["treatment"],
+            data["date"]
         )
-        return jsonify({"success": ok}), 200 if ok else 500
-    except KeyError as e:
-        return jsonify({"error": f"missing key: {e}"}), 400
+        app.logger.info(f"[BOOK] push_to_airtable returned: {ok}")
+        return jsonify({"success": ok}), 200
+    except Exception as e:
+        app.logger.exception("[BOOK] Exception during booking:")
+        return jsonify({"error": str(e)}), 500
+
 
 if __name__ == "__main__":
     # Get the PORT Render assigns (default to 5000 locally)
