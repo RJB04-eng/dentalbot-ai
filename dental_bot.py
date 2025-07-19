@@ -41,15 +41,17 @@ def push_to_airtable(name, dob, phone, email, treatment, date):
         "Content-Type": "application/json"
     }
     payload = {
-        "fields": {
-            "Name":        name,
-            "DOB":         dob,
-            "PhoneNumber": phone,
-            "Issues":      email,
-            "Treatment":   treatment,
-            "Status":      date
-        }
+        payload = {
+    "fields": {
+        "Name":        name,
+        "DOB":         dob,
+        "PhoneNumber": phone,
+        "Issues":      email,
+        "Treatment":   treatment,
+        "Status":      True
     }
+}
+
 
     # Debug logging
     app.logger.info(f"[AIRTABLE DEBUG] POST → {url}")
