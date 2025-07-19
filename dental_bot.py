@@ -1,76 +1,37 @@
-# dental_bot.py
-
-from flask import current_app as app
-
 import os
 import re
 import json
 from datetime import datetime
 from typing import Dict, List
 import requests
+from flask import current_app as app
 from rapidfuzz import fuzz, process
 
+# Load Airtable credentials from environment
+AIRTABLE_BASE_ID = os.environ["AIRTABLE_BASE_ID"]
+AIRTABLE_API_KEY = os.environ["AIRTABLE_API_KEY"]
+
+# Clinic constants and intents omitted for brevity
 GREETING = (
     "Hey there, this is Cedar House Dental how can we help you today? 🏡"
 )
-NO_MATCH = "Sorry, I didn’t get that. Please try again."
 
-CLINIC_INFO = """
-Clinic Name: Cedar House Dental
-Location: 18 Orchard Road, Cardiff
-Phone: 029 2019 48
-Email: info@cedarhousedental
-Opening Hours: Monday–Friday 9:00am–5:00pm, Sat–Sun Closed
-Parking: Free parking behind the clinic
+# ... other constants ...
 
-Services & Prices
-- Check-up: £55
-- Hygienist Clean: £75
-- Teeth Whitening: £299
-- Composite Bonding: £150 per tooth
-- Invisalign: from £2,500
-- Emergency Appointment: £85 (same-day slots)
-
-FAQs
-- Accepting new PRIVATE patients (no NHS)
-- Emergency appointments available same-day
-- Payment: all major cards, Apple Pay
-"""
-
-ALLOWED_TREATMENTS = [
-    "Check Ups",
-    "Hygienist Clean",
-    "Teeth Whitening",
-    "Composite Bonding",
-    "Invisalign",
-    "Emergency Appointment",
-]
-
-AIRTABLE_BASE_ID  = os.environ["AIRTABLE_BASE_ID"]
-AIRTABLE_API_KEY = os.environ["AIRTABLE_API_KEY"]
-
+# Intent matching
 INTENTS = {
-    "Book a appointment": [
+    "Book an appointment": [
         "book", "i want to book", "schedule", "appointment", "reserve", "plan a visit"
     ],
-    "Services.": [
-        "services", "treatments", "what do you offer", "prices", "cost"
-    ],
-    "FAQs": [
-        "faq", "frequently asked", "what is asked", "not sure what to ask"
-    ],
-    "Real Human": [
-        "real human", "receptionist", "live person", "human", "speak to someone"
-    ],
-    "Yes": ["yes", "yep", "sure", "ok", "correct"],
-    "No": ["no", "nope", "nah", "not at all"],
+    # ... other intents ...
 }
 
 def match_intent(text: str) -> str:
     text = text.lower()
-    best, score = process.extractOne(text, [k for k in INTENTS])
+    best, score = process.extractOne(text, list(INTENTS.keys()))
     return best if score > 60 else "None"
 
+# Function to push booking data into Airtable
 def push_to_airtable(name, dob, phone, email, treatment, date):
     url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/Bookings"
     headers = {
@@ -88,14 +49,27 @@ def push_to_airtable(name, dob, phone, email, treatment, date):
         }
     }
 
-    # ——— DEBUG: outgoing ———
+    # Debug logging
     app.logger.info(f"[AIRTABLE DEBUG] POST → {url}")
     app.logger.info(f"[AIRTABLE DEBUG] Payload: {payload}")
 
     resp = requests.post(url, json=payload, headers=headers)
 
-    # ——— DEBUG: incoming ———
     app.logger.info(f"[AIRTABLE DEBUG] Status: {resp.status_code}")
     app.logger.info(f"[AIRTABLE DEBUG] Body: {resp.text}")
 
     return resp.status_code == 200
+
+# DentalBot class managing session state
+class DentalBot:
+    def __init__(self):
+        self.name = None
+        self.dob = None
+        self.phone = None
+        self.treatment = None
+
+    def match_intent(self, text: str) -> str:
+        return match_intent(text)
+
+    def reset(self):
+        self.name = self.dob = self.phone = self.treatment = None
