@@ -88,35 +88,15 @@ def push_to_airtable(name, dob, phone, email, treatment, date):
         }
     }
 
-    # DEBUG: log the outgoing request
-    print(f"[AIRTABLE DEBUG] POST → {url}")
-    print(f"[AIRTABLE DEBUG] Payload: {payload}")
+    # DEBUG: log the outgoing request via Flask’s logger
+    app.logger.info(f"[AIRTABLE DEBUG] POST → {url}")
+    app.logger.info(f"[AIRTABLE DEBUG] Payload: {payload}")
 
+    # Actually send to Airtable
     resp = requests.post(url, json=payload, headers=headers)
 
-    # DEBUG: log the response
-    print(f"[AIRTABLE DEBUG] Status: {resp.status_code}")
-    print(f"[AIRTABLE DEBUG] Body: {resp.text}")
+    # DEBUG: log the response via Flask’s logger
+    app.logger.info(f"[AIRTABLE DEBUG] Status: {resp.status_code}")
+    app.logger.info(f"[AIRTABLE DEBUG] Body: {resp.text}")
 
     return resp.status_code == 200
-
-    # DEBUG: print status and body so we can see the Airtable error
-    print(f"[AIRTABLE DEBUG] URL: {url}")
-    print(f"[AIRTABLE DEBUG] Payload: {payload}")
-    print(f"[AIRTABLE DEBUG] Status: {resp.status_code}")
-    print(f"[AIRTABLE DEBUG] Body: {resp.text}")
-
-    return resp.status_code == 200
-
-class DentalBot:
-    def __init__(self):
-        self.name = None
-        self.dob = None
-        self.phone = None
-        self.treatment = None
-
-    def match_intent(self, text):
-        return match_intent(text)
-
-    def reset(self):
-        self.name = self.dob = self.phone = self.treatment = None
