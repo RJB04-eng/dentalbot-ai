@@ -35,9 +35,9 @@ def match_intent(text: str) -> str:
 
 # Function to push booking data into Airtable
 def push_to_airtable(name, dob, phone, email, treatment, date):
-    url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/Table%201"
+    url = "https://api.airtable.com/v0/appGrimhgiQjWqdxu/Table%201"
     headers = {
-        "Authorization": f"Bearer {AIRTABLE_API_KEY}",
+        "Authorization": Bearer {AIRTABLE_API_KEY}",
         "Content-Type": "application/json"
     }
     payload = {
