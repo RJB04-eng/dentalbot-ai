@@ -88,14 +88,13 @@ def push_to_airtable(name, dob, phone, email, treatment, date):
         }
     }
 
-    # DEBUG: log the outgoing request via Flask’s logger
+    # ——— DEBUG: outgoing ———
     app.logger.info(f"[AIRTABLE DEBUG] POST → {url}")
     app.logger.info(f"[AIRTABLE DEBUG] Payload: {payload}")
 
-    # Actually send to Airtable
     resp = requests.post(url, json=payload, headers=headers)
 
-    # DEBUG: log the response via Flask’s logger
+    # ——— DEBUG: incoming ———
     app.logger.info(f"[AIRTABLE DEBUG] Status: {resp.status_code}")
     app.logger.info(f"[AIRTABLE DEBUG] Body: {resp.text}")
 
