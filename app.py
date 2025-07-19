@@ -5,6 +5,9 @@ from flask import Flask, request, jsonify
 from dental_bot import DentalBot, push_to_airtable
 import logging
 
+AIRTABLE_API_KEY = os.environ["patbV051vVFih05QY"]
+AIRTABLE_BASE_ID = os.environ["appGrimhgiQjWqdxu"]
+
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 
