@@ -68,25 +68,32 @@ def match_intent(text: str) -> str:
     best, score = process.extractOne(text, [k for k in INTENTS])
     return best if score > 60 else "None"
 
-def push_to_airtable(name: str, dob: str, phone: str, treatment: str) -> bool:
+def push_to_airtable(name, dob, phone, email, treatment, date):
+    url = f"https://api.airtable.com/v0/{appGrimhgiQjWqdxu}/Bookings"
     headers = {
-        "Authorization": f"Bearer {AIRTABLE_KEY}",
+        "Authorization": f"Bearer {patbV051vVFih05QY}",
         "Content-Type": "application/json"
     }
-    data = {
-        "records": [
-            {
-                "fields": {
-                     "Name":        name,       # JSON “name” → Airtable “Name”
-    "DOB":         dob,        # JSON “dob” → Airtable “DOB”
-    "PhoneNumber": phone,      # JSON “phone” → Airtable “PhoneNumber”
-    "Issues":      email,      # JSON “email” → Airtable “Issues”
-    "Treatment":   treatment,  # JSON “treatment” → Airtable “Treatment”
-    "Status":      date        # JSON “date” → Airtable “Status”
-  }
-}
-    r = requests.post(AIRTABLE_URL, headers=headers, json=data, timeout=10)
-    return r.status_code == 200
+    payload = {
+        "fields": {
+            "Name":        name,
+            "DOB":         dob,
+            "PhoneNumber": phone,
+            "Issues":      email,
+            "Treatment":   treatment,
+            "Status":      date
+        }
+    }
+
+    resp = requests.post(url, json=payload, headers=headers)
+
+    # DEBUG: print status and body so we can see the Airtable error
+    print(f"[AIRTABLE DEBUG] URL: {url}")
+    print(f"[AIRTABLE DEBUG] Payload: {payload}")
+    print(f"[AIRTABLE DEBUG] Status: {resp.status_code}")
+    print(f"[AIRTABLE DEBUG] Body: {resp.text}")
+
+    return resp.status_code == 200
 
 class DentalBot:
     def __init__(self):
