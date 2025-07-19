@@ -77,15 +77,14 @@ def push_to_airtable(name: str, dob: str, phone: str, treatment: str) -> bool:
         "records": [
             {
                 "fields": {
-                    "Name": name,
-                    "DOB": dob,
-                    "PhoneNumber": phone,
-                    "Treatment": treatment,
-                    "Status": "False",
-                }
-            }
-        ]
-    }
+                     "Name":        name,       # JSON “name” → Airtable “Name”
+    "DOB":         dob,        # JSON “dob” → Airtable “DOB”
+    "PhoneNumber": phone,      # JSON “phone” → Airtable “PhoneNumber”
+    "Issues":      email,      # JSON “email” → Airtable “Issues”
+    "Treatment":   treatment,  # JSON “treatment” → Airtable “Treatment”
+    "Status":      date        # JSON “date” → Airtable “Status”
+  }
+}
     r = requests.post(AIRTABLE_URL, headers=headers, json=data, timeout=10)
     return r.status_code == 200
 
