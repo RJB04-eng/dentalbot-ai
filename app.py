@@ -1,5 +1,6 @@
 # app.py
 
+import os
 from flask import Flask, request, jsonify
 from dental_bot import DentalBot, push_to_airtable
 import logging
@@ -48,4 +49,8 @@ def book():
         return jsonify({"error": f"missing key: {e}"}), 400
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    # Get the PORT Render assigns (default to 5000 locally)
+    port = int(os.environ.get("PORT", 5000))
+    # Enable debug locally, bind to all interfaces so Render can reach it
+    app.run(debug=True, host="0.0.0.0", port=port)
+
