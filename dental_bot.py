@@ -11,6 +11,8 @@ from rapidfuzz import fuzz, process
 AIRTABLE_BASE_ID = os.environ["AIRTABLE_BASE_ID"]
 AIRTABLE_API_KEY = os.environ["AIRTABLE_API_KEY"]
 
+app.logger.info(f"[ENV CHECK] token prefix={AIRTABLE_API_KEY[:6]}… len={len(AIRTABLE_API_KEY)}")
+
 # Clinic constants and intents omitted for brevity
 GREETING = (
     "Hey there, this is Cedar House Dental how can we help you today? 🏡"
