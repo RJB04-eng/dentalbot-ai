@@ -46,12 +46,14 @@ def book():
     app.logger.info(f"[BOOK] Received payload: {data}")
     try:
         ok = push_to_airtable(
-            data["name"],
-            data["dob"],
-            data["phone"],
-            data["email"],
-            data["treatment"],
-            data["date"]
+            ok = push_to_airtable(
+    data["name"],
+    data["dob"],
+    data["phone"],
+    data["email"],
+    data["treatment"]
+)
+
         )
         app.logger.info(f"[BOOK] push_to_airtable returned: {ok}")
         return jsonify({"success": ok}), 200

@@ -34,7 +34,7 @@ def match_intent(text: str) -> str:
     return best if score > 60 else "None"
 
 # Function to push booking data into Airtable
-def push_to_airtable(name, dob, phone, email, treatment, date):
+def push_to_airtable(name, dob, phone, email, treatment):
     url = "https://api.airtable.com/v0/appGrimhgiQjWqdxu/Bookings"
     headers = {
         "Authorization": f"Bearer {AIRTABLE_API_KEY}",
