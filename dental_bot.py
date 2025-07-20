@@ -40,8 +40,7 @@ def push_to_airtable(name, dob, phone, email, treatment, date):
         "Authorization": f"Bearer {AIRTABLE_API_KEY}",
         "Content-Type": "application/json"
     }
-    payload = {
-        payload = {
+   payload = {
     "fields": {
         "Name":        name,
         "DOB":         dob,
@@ -51,6 +50,8 @@ def push_to_airtable(name, dob, phone, email, treatment, date):
         "Status":      True
     }
 }
+
+
 
 
     # Debug logging
