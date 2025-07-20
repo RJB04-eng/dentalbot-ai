@@ -46,7 +46,6 @@ def book():
     app.logger.info(f"[BOOK] Received payload: {data}")
     try:
         ok = push_to_airtable(
-            ok = push_to_airtable(
     data["name"],
     data["dob"],
     data["phone"],
