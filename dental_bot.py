@@ -1,58 +1,31 @@
+# dental_bot.py
 import os
-import re
-import json
-from datetime import datetime
-from typing import Dict, List
 import requests
 from flask import current_app as app
-from rapidfuzz import fuzz, process
 
-# Load Airtable credentials from environment
+# Load credentials
 AIRTABLE_BASE_ID = os.environ["AIRTABLE_BASE_ID"]
 AIRTABLE_API_KEY = os.environ["AIRTABLE_API_KEY"]
 
-print(f"[ENV CHECK] token prefix={AIRTABLE_API_KEY[:6]}… len={len(AIRTABLE_API_KEY)}")
-
-# Clinic constants and intents omitted for brevity
-GREETING = (
-    "Hey there, this is Cedar House Dental how can we help you today? 🏡"
-)
-
-# ... other constants ...
-
-# Intent matching
-INTENTS = {
-    "Book an appointment": [
-        "book", "i want to book", "schedule", "appointment", "reserve", "plan a visit"
-    ],
-    # ... other intents ...
-}
-
-def match_intent(text: str) -> str:
-    text = text.lower()
-    best, score = process.extractOne(text, list(INTENTS.keys()))
-    return best if score > 60 else "None"
-
-# Function to push booking data into Airtable
-
+# Function to push to Airtable
 def push_to_airtable(name, dob, phone, email, treatment):
-    url = "https://api.airtable.com/v0/appGrimhgiQjWqdxu/Bookings"
+    url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/Bookings"
     headers = {
         "Authorization": f"Bearer {AIRTABLE_API_KEY}",
         "Content-Type": "application/json"
     }
     payload = {
         "fields": {
-            "Name":        name,
-            "DOB":         dob,
+            "Name": name,
+            "DOB": dob,
             "PhoneNumber": phone,
-            "Issues":      email,
-            "Treatment":   treatment,
-            "Status":      True
+            "Issues": email,
+            "Treatment": treatment,
+            "Status": True
         }
     }
 
-    # —— DEBUG prints INSIDE the function ——
+    # Debug logs
     print(f"[AIRTABLE DEBUG] POST → {url}")
     print(f"[AIRTABLE DEBUG] Payload: {payload}")
 
@@ -60,20 +33,9 @@ def push_to_airtable(name, dob, phone, email, treatment):
 
     print(f"[AIRTABLE DEBUG] Status: {resp.status_code}")
     print(f"[AIRTABLE DEBUG] Body: {resp.text}")
-    # — end debug —
 
     return resp.status_code == 200
 
-# DentalBot class managing session state
+# Minimal bot class
 class DentalBot:
-    def __init__(self):
-        self.name = None
-        self.dob = None
-        self.phone = None
-        self.treatment = None
-
-    def match_intent(self, text: str) -> str:
-        return match_intent(text)
-
-    def reset(self):
-        self.name = self.dob = self.phone = self.treatment = None
+    pass
