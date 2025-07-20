@@ -53,6 +53,7 @@ def book():
     data["treatment"]
 )
 
+
         )
         app.logger.info(f"[BOOK] push_to_airtable returned: {ok}")
         return jsonify({"success": ok}), 200
