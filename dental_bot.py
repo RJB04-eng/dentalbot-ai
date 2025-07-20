@@ -34,37 +34,36 @@ def match_intent(text: str) -> str:
     return best if score > 60 else "None"
 
 # Function to push booking data into Airtable
+
 def push_to_airtable(name, dob, phone, email, treatment):
+
     url = "https://api.airtable.com/v0/appGrimhgiQjWqdxu/Bookings"
     headers = {
         "Authorization": f"Bearer {AIRTABLE_API_KEY}",
         "Content-Type": "application/json"
     }
-   payload = {
-    "fields": {
-        "Name":        name,
-        "DOB":         dob,
-        "PhoneNumber": phone,
-        "Issues":      email,
-        "Treatment":   treatment,
-        "Status":      True
+
+    payload = {
+        "fields": {
+            "Name":        name,
+            "DOB":         dob,
+            "PhoneNumber": phone,
+            "Issues":      email,
+            "Treatment":   treatment,
+            "Status":      True          # checkbox ✓
+        }
     }
-}
 
-
-
-
-    # Debug logging
-    app.logger.info(f"[AIRTABLE DEBUG] POST → {url}")
-    app.logger.info(f"[AIRTABLE DEBUG] Payload: {payload}")
+    # Debug
+    print(f"[AIRTABLE DEBUG] POST → {url}")
+    print(f"[AIRTABLE DEBUG] Payload: {payload}")
 
     resp = requests.post(url, json=payload, headers=headers)
 
-    app.logger.info(f"[AIRTABLE DEBUG] Status: {resp.status_code}")
-    app.logger.info(f"[AIRTABLE DEBUG] Body: {resp.text}")
+    print(f"[AIRTABLE DEBUG] Status: {resp.status_code}")
+    print(f"[AIRTABLE DEBUG] Body: {resp.text}")
 
     return resp.status_code == 200
-
 # DentalBot class managing session state
 class DentalBot:
     def __init__(self):
