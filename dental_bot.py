@@ -19,7 +19,7 @@ def push_to_airtable(name, dob, phone, email, treatment):
             "PhoneNumber": phone,
             "Issues":      email,
             "Treatment":   treatment,
-            "Status":      True,
+            "Status":      "True"
         }
     }
 
