@@ -8,6 +8,9 @@ AIRTABLE_API_KEY = os.environ["AIRTABLE_API_KEY"]
 
 def push_to_airtable(name, dob, phone, email, treatment):
     url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/Bookings"
+
+print(f"[ENV CHECK] API key repr: {AIRTABLE_API_KEY!r}")
+
     headers = {
         "Authorization": f"Bearer {AIRTABLE_API_KEY}",
         "Content-Type": "application/json",

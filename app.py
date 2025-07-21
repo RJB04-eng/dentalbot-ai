@@ -1,14 +1,18 @@
-import os
-import logging
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "vendor"))
+
 from flask import Flask, request, jsonify
 from dental_bot import push_to_airtable
+import logging
 
-# Load from env
 AIRTABLE_API_KEY = os.environ["AIRTABLE_API_KEY"]
 AIRTABLE_BASE_ID = os.environ["AIRTABLE_BASE_ID"]
 
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
+
+def json_resp(body: dict, code: int):
+    return jsonify(body), code
 
 @app.route("/", methods=["GET"])
 def health():
@@ -16,20 +20,31 @@ def health():
 
 @app.route("/book", methods=["POST"])
 def book():
-    data = request.get_json(force=True)
-    app.logger.info(f"[BOOK] Received payload: {data}")
+    try:
+        data = request.get_json(force=True)
+        app.logger.info(f"[BOOK] Received payload: {data}")
 
-    ok = push_to_airtable(
-        data.get("name"),
-        data.get("dob"),
-        data.get("phone"),
-        data.get("email"),
-        data.get("treatment")
-    )
+        
+        for field in ("name","dob","phone","email","treatment"):
+            if not data.get(field):
+                return json_resp(
+                    {"success": False, "error": f"Missing '{field}'"}, 400
+                )
 
-    app.logger.info(f"[BOOK] push_to_airtable returned: {ok}")
-    status_code = 200 if ok else 400
-    return jsonify({"success": ok}), status_code
+        ok = push_to_airtable(
+            data["name"],
+            data["dob"],
+            data["phone"],
+            data["email"],
+            data["treatment"],
+        )
+
+        app.logger.info(f"[BOOK] push_to_airtable returned: {ok}")
+        return json_resp({"success": ok}, 200 if ok else 400)
+
+    except Exception as e:
+        app.logger.exception("[BOOK] uncaught exception:")
+        return json_resp({"success": False, "error": str(e)}, 500)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
